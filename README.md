@@ -177,15 +177,18 @@
         ip = models.GenericIPAddressField(protocol="ipv4", db_index=True) # protocol默认是both
         port = models.IntegerField()
         b = models.ForeignKey("Business", to_field='id')
-    
+        
     # 应用信息
     class Application(models.Model):
         name = models.CharField(max_length=32)
-    
+        
     # 主机与应用关系
     class HostToApp(models.Model):
         hobj = models.ForeignKey(to='Host', to_field='nid')
         aobj = models.ForeignKey(to='Application', to_field='id')
+        
+    # 插入数据
+    HostToapp.objects.create(hobj_id=1, aobj_id=2)
         
 ### 方式2：自动创建关系表
     # 主机信息
@@ -195,20 +198,21 @@
         ip = models.GenericIPAddressField(protocol="ipv4", db_index=True) # protocol默认是both
         port = models.IntegerField()
         b = models.ForeignKey("Business", to_field='id')
-    
+        
     # 应用信息
     class Application(models.Model):
         name = models.CharField(max_length=32)
         r = models.ManyToManyField("Host")
-    无法直接对第三张表进行操作
+         
+    # 无法直接对第三张表进行操作
     obj = Application.objects.get(id=1)
     obj.name
-    
+        
     # 第三张表增加操作
     obj.r.add(1) 
     obj.r.add(2) 
     obj.r.add(*[1,2,3,4])
-    
+        
     # 第三张表删除操作
     obj.r.remove(1) 
     obj.r.remove(2,4) 
@@ -217,6 +221,6 @@
     obj.r.clear()
     
     obj.r.set([3,5,7])
-    
+        
     # 所有相关主机对象“列表” QuerySet
     obj.r.all()
